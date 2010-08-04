@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YamlSharp", "YamlSharp\YamlSharp.csproj", "{42E0CCDD-BBA5-4AF9-812B-850DE60F73F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YamlSharp.Test", "YamlSharp.Test\YamlSharp.Test.csproj", "{54C4A824-F0B9-4291-8C5F-591830275038}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42E0CCDD-BBA5-4AF9-812B-850DE60F73F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42E0CCDD-BBA5-4AF9-812B-850DE60F73F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42E0CCDD-BBA5-4AF9-812B-850DE60F73F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42E0CCDD-BBA5-4AF9-812B-850DE60F73F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54C4A824-F0B9-4291-8C5F-591830275038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54C4A824-F0B9-4291-8C5F-591830275038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54C4A824-F0B9-4291-8C5F-591830275038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54C4A824-F0B9-4291-8C5F-591830275038}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
