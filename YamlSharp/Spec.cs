@@ -287,7 +287,45 @@ namespace YamlSharp
 		
 		#region Escaped Characters (41-62)
 		
+		/// <summary>
+		/// [41] c-escape
+		/// </summary>
+		public const char Escape = '\\';
 		
+		/// <summary>
+		/// [42] ns-esc-null
+		/// </summary>
+		public const char EscapeNull = '0';
+		
+		/// <summary>
+		/// [43] ns-esc-bell
+		/// </summary>
+		public const char EscapeBell = 'a';
+		
+		/// <summary>
+		/// [44] ns-esc-backspace
+		/// </summary>
+		public const char EscapeBackspace = 'b';
+		
+		/// <summary>
+		/// [45] ns-esc-horizontal-tab
+		/// </summary>
+		public const char EscapeHorizontalTab = 't';
+		
+		/// <summary>
+		/// [46] ns-esc-line-feed
+		/// </summary>
+		public const char EscapeLineFeed = 'n';
+		
+		/// <summary>
+		/// [47] ns-esc-vertical-tab
+		/// </summary>
+		public const char EscapeVerticalTab = 'v';
+		
+		/// <summary>
+		/// [48] ns-esc-form-feed
+		/// </summary>
+		public const char EscapeFormFeed = 'f';
 		
 		#endregion
 	}
