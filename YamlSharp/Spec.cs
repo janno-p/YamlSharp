@@ -550,5 +550,123 @@ namespace YamlSharp
 		public void SLComments() {}
 		
 		#endregion
+		
+		#region Separation Lines
+		
+		// [80] s-separate(n,c) ::= c = block-out => s-separate-lines(n)
+		//                          c = block-in  => s-separate-lines(n)
+		//                          c = flow-out  => s-separate-lines(n)
+		//                          c = flow-in   => s-separate-lines(n)
+		//                          c = block-key => s-separate-in-line
+		//                          c = flow-key  => s-separate-in-line
+		
+		// [81] s-separate-lines(n) ::= ( s-l-comments s-flow-line-prefix(n) ) | s-separate-in-line
+		
+		#endregion
+		
+		#region Directives
+		
+		// [82] l-directive ::= "%" ( ns-yaml-directive | ns-tag-directive | ns-reserved-directive ) s-l-comments
+		
+		// [83] ns-reserved-directive ::= ns-directive-name ( s-separate-in-line ns-directive-parameter )*
+		
+		// [84] ns-directive-name ::= ns-char+
+		
+		// [85] ns-directive-parameter ::= ns-char+
+		
+		// [86] ns-yaml-directive ::= "Y" "A" "M" "L" s-separate-in-line ns-yaml-version
+		
+		// [87] ns-yaml-version ::= ns-dec-digit+ "." ns-dec-digit+
+		
+		// [88] ns-tag-directive ::= "T" "A" "G" s-separate-in-line c-tag-handle s-separate-in-line ns-tag-prefix
+		
+		// [89] c-tag-handle ::= c-named-tag-handle | c-secondary-tag-handle | c-primary-tag-handle
+		
+		// [90] c-primary-tag-handle ::= "!"
+		
+		// [91] c-secondary-tag-handle ::= "!" "!"
+		
+		// [92] c-named-tag-handle ::= "!" ns-word-char+ "!"
+		
+		// [93] ns-tag-prefix ::= c-ns-local-tag-prefix | ns-global-tag-prefix
+		
+		// [94] c-ns-local-tag-prefix ::= "!" ns-uri-char*
+		
+		// [95] ns-global-tag-prefix ::= ns-tag-char ns-uri-char*
+		
+		#endregion
+		
+		#region Node Properties
+		
+		// [96] c-ns-properties(n,c) ::= ( c-ns-tag-property ( s-separate(n,c) c-ns-anchor-property )? ) | ( c-ns-anchor-property ( s-separate(n,c) c-ns-tag-property )? )
+		
+		// [97] c-ns-tag-property ::= c-verbatim-tag | c-ns-shorthand-tag | c-non-specific-tag
+		
+		// [98] c-verbatim-tag ::= "!" "<" ns-uri-char+ ">"
+		
+		// [99] c-ns-shorthand-tag ::= c-tag-handle ns-tag-char+
+		
+		// [100] c-non-specific-tag ::= "!"
+		
+		// [101] c-ns-anchor-property ::= "&" ns-anchor-name
+		
+		// [102] ns-anchor-char ::= ns-char - c-flow-indicator
+		
+		// [103] ns-anchor-name ::= ns-anchor-char+
+		
+		#endregion
+		
+		
+		
+		#region Block Styles
+		
+		// [162] c-b-block-header(m,t) ::= ( ( c-indentation-indicator(m) c-chomping-indicator(t) ) | ( c-chomping-indicator(t) c-indentation-indicator(m) ) ) s-b-comment
+		
+		// [163] c-indentation-indicator(m) ::= ns-dec-digit => m = ns-dec-digit - #x30
+		//                                      /* Empty */  => m = auto-detect()
+		
+		// [164] c-chomping-indicator(t) ::= "-"         => t = strip
+		//                                   "+"         => t = keep
+		//                                   /* Empty */ => t = clip
+		
+		// [165] b-chomped-last(t) ::= t = strip => b-non-content | /* End of file */
+		//                             t = clip  => b-as-line-feed | /* End of file */
+		//                             t = keep  => b-as-line-feed | /* End of file */
+		
+		// [166] l-chomped-empty(n,t) ::= t = strip => l-strip-empty(n)
+		//                                t = clip  => l-strip-empty(n)
+		//                                t = keep  => l-keep-empty(n)
+		
+		// [167] l-strip-empty(n) ::= ( s-indent(<=n) b-non-content )* l-trail-comments(n)?
+		
+		// [168] l-keep-empty(n) ::= l-empty(n,block-in)* l-trail-comments(n)?
+		
+		// [169] l-trail-comments(n) ::= s-indent(<n) c-nb-comment-text b-comment l-comment*
+		
+		#endregion
+		
+		#region YAML Character Stream
+		
+		// [202] l-document-prefix ::= c-byte-order-mark? l-comment*
+		
+		// [203] c-directives-end ::= "-" "-" "-"
+		
+		// [204] c-document-end ::= "." "." "."
+		
+		// [205] l-document-suffix ::= c-document-end s-l-comments
+		
+		// [206] c-forbidden ::= /* Start of line */ ( c-directives-end | c-document-end ) ( b-char | s-white | /* End of file */ )
+		
+		// [207] l-bare-document ::= s-l+block-node(-1,block-in) /* Excluding c-forbidden content */
+		
+		// [208] l-explicit-document ::= c-directives-end ( l-bare-document | ( e-node s-l-comments ) )
+		
+		// [209] l-directive-document ::= l-directive+ l-explicit-document
+		
+		// [210] l-any-document ::= l-directive-document | l-explicit-document | l-bare-document
+		
+		// [211] l-yaml-stream ::= l-document-prefix* l-any-document? ( l-document-suffix+ l-document-prefix* l-any-document? | l-document-prefix* l-explicit-document? )*
+		
+		#endregion
 	}
 }
