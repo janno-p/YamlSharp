@@ -453,5 +453,102 @@ namespace YamlSharp
 		}
 		
 		#endregion
+		
+		#region Line Prefixes
+		
+		/// <summary>
+		/// [67] s-line-prefix(n,c) ::=
+		/// 	c = block-out => s-block-line-prefix(n)
+		/// 	c = block-in  => s-block-line-prefix(n)
+		/// 	c = flow-out  => s-flow-line-prefix(n)
+		/// 	c = flow-in   => s-flow-line-prefix(n)
+		/// </summary>
+		public int GetLinePrefix(object n, object c)
+		{
+			return 0;
+		}
+		
+		/// <summary>
+		/// [68] s-block-line-prefix(n) ::= s-indent(n)
+		/// </summary>
+		public int GetBlockLinePrefix()
+		{
+			return 0;
+		}
+		
+		/// <summary>
+		/// [69] s-flow-line-prefix ::= s-indent(n) s-separate-in-line?
+		/// </summary>
+		public int GetFlowLinePrefix()
+		{
+			return 0;
+		}
+		
+		#endregion
+		
+		#region Empty Lines
+		
+		/// <summary>
+		/// [70] l-empty(n,c) ::= ( s-line-prefix(n,c) | s-indent(<n) ) b-as-line-feed
+		/// </summary>
+		public bool IsEmptyLine()
+		{
+			return false;
+		}
+		
+		#endregion
+		
+		#region Line Folding
+		
+		/// <summary>
+		/// [71] b-l-trimmed(n,c) ::= b-non-content l-empty(n,c)+
+		/// </summary>
+		public void IsTrimmed() {}
+		
+		/// <summary>
+		/// [72] b-as-space ::= b-break
+		/// </summary>
+		public void IsAsSpace() {}
+		
+		/// <summary>
+		/// [73] b-l-folded(n,c) ::= b-l-trimmed(n,c) | b-as-space
+		/// </summary>
+		public void IsFolded() {}
+		
+		/// <summary>
+		/// [74] s-flow-folded(n) ::= s-separate-in-line? b-l-folded(n,flow-in) s-flow-line-prefix(n)
+		/// </summary>
+		public void IsFlowFolded() {}
+		
+		#endregion
+		
+		#region Comments
+		
+		/// <summary>
+		/// [75] c-nb-comment-text ::= "#" nb-char*
+		/// </summary>
+		public void IsCommentText() {}
+		
+		/// <summary>
+		/// [76] b-comment ::= b-non-content | /* End of file */
+		/// </summary>
+		public void IsComment() {}
+		
+		/// <summary>
+		/// [77] s-b-comment ::= ( s-separate-in-line c-nb-comment-text? )? b-comment
+		/// </summary>
+		public void SBComment() {}
+		
+		/// <summary>
+		/// [78] l-comment ::= s-separate-in-line c-nb-comment-text? b-comment
+		/// </summary>
+		public void LComment() {}
+		
+		/// <summary>
+		/// [79] s-l-comments ::= ( s-b-comment | /* Start of line */ ) l-comment*
+		/// </summary>
+		public void SLComments() {}
+		
+		#endregion
 	}
 }
