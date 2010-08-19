@@ -327,6 +327,131 @@ namespace YamlSharp
 		/// </summary>
 		public const char EscapeFormFeed = 'f';
 		
+		/// <summary>
+		/// [49] ns-esc-carriage-return
+		/// </summary>
+		public const char EscapeCarriageReturn = 'r';
+		
+		/// <summary>
+		/// [50] ns-esc-escape
+		/// </summary>
+		public const char EscapeEscape = 'e';
+		
+		/// <summary>
+		/// [51] ns-esc-space
+		/// </summary>
+		public const char EscapeSpace = ' '; // 0x20
+		
+		/// <summary>
+		/// [52] ns-esc-double-quote
+		/// </summary>
+		public const char EscapeDoubleQuote = '"';
+		
+		/// <summary>
+		/// [53] ns-esc-slash
+		/// </summary>
+		public const char EscapeSlash = '/';
+		
+		/// <summary>
+		/// [54] ns-esc-backslash
+		/// </summary>
+		public const char EscapeBackslash = '\\';
+		
+		/// <summary>
+		/// [55] ns-esc-next-line
+		/// </summary>
+		public const char EscapeNextLine = 'N';
+		
+		/// <summary>
+		/// [56] ns-esc-non-breaking-space
+		/// </summary>
+		public const char EscapeNonBreakingSpace = '_';
+		
+		/// <summary>
+		/// [57] ns-esc-line-separator
+		/// </summary>
+		public const char EscapeLineSeparator = 'L';
+		
+		/// <summary>
+		/// [58] ns-esc-paragraph-separator
+		/// </summary>
+		public const char EscapeParagrahpSeparator = 'P';
+		
+		/// <summary>
+		/// [59] ns-esc-8-bit
+		/// </summary>
+		public const char Escape8Bit = 'x';
+		
+		/// <summary>
+		/// [60] ns-esc-16-bit
+		/// </summary>
+		public const char Escape16Bit = 'u';
+		
+		/// <summary>
+		/// [61] ns-esc-32-bit
+		/// </summary>
+		public const char Escape32Bit = 'U';
+		
+		/// <summary>
+		/// [62] c-ns-esc-char
+		/// </summary>
+		public bool IsEscapedCharacter(string str)
+		{
+			return str[0] == Escape && "0abtnvfre \"/\\N_LPxuU".IndexOf(str[1]) >= 0;
+		}
+		
+		#endregion
+		
+		#region Indentation Spaces
+		
+		/// <summary>
+		/// [63] s-indent(n)
+		/// </summary>
+		public bool GetIndent(string str, int depth)
+		{
+			for (int i = 0; i < depth; i++)
+				if (str[i] != Space)
+					return false;
+			return true;
+		}
+		
+		/// <summary>
+		/// [64] s-indent(<n)
+		/// </summary>
+		public bool IsEndOfBlock(string str, int depth)
+		{
+			for (int i = 0; i < depth; i++)
+				if (str[i] != Space)
+					return true;
+			return false;
+		}
+		
+		/// <summary>
+		/// [65] s-indent(<=n)
+		/// </summary>
+		public bool IsIndent(string str, int depth)
+		{
+			for (int i = 0; i < depth; i++)
+				if (str[i] != Space)
+					return false;
+			return true;
+		}
+		
+		#endregion
+		
+		#region Separation Spaces
+		
+		/// <summary>
+		/// [66] s-separate-in-line
+		/// </summary>
+		public int GetSeparationInLine(string str)
+		{
+			int i = 0;
+			while (WhiteSpace.IndexOf(str[i]) >= 0)
+				i++;
+			return i;
+		}
+		
 		#endregion
 	}
 }
