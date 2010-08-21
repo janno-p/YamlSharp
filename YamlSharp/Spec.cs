@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace YamlSharp
 {
@@ -601,5 +602,10 @@ namespace YamlSharp
 		// [211] l-yaml-stream ::= l-document-prefix* l-any-document? ( l-document-suffix+ l-document-prefix* l-any-document? | l-document-prefix* l-explicit-document? )*
 		
 		#endregion
+
+        public static bool IsDocumentPrefix(Stream stream)
+        {
+            stream.Read( )
+        }
 	}
 }
