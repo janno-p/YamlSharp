@@ -605,7 +605,7 @@ namespace YamlSharp
 
         public static bool IsDocumentPrefix(Stream stream)
         {
-            stream.Read( )
+            return stream.ReadByte() == 0;
         }
 	}
 }
