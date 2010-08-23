@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using System.Text;
 
 namespace YamlSharp.Test
 {
@@ -30,5 +31,20 @@ namespace YamlSharp.Test
                     Assert.AreEqual("test", reader.ReadLine());
             }
         }
+		
+		[Test]
+		public void Katse()
+		{
+			var fileName = "../../TestData/utf32le-explicit-bom.yml";
+			
+			using (var s = File.OpenRead(fileName))
+			{
+				s.ReadByte(); s.ReadByte(); s.ReadByte(); s.ReadByte();
+				s.ReadByte(); s.ReadByte(); s.ReadByte(); s.ReadByte();
+				
+				using (TextReader r = new StreamReader(s, new UTF32Encoding(false, true, true)))
+					Assert.AreEqual("est", r.ReadLine());
+			}
+		}
     }
 }
