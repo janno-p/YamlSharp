@@ -62,260 +62,93 @@ X+,X-Y+     A production as above, with the additional property that the matched
 
 
 # Line Break Characters (24-30) #
-		
-		/// <summary>
-		/// [24] b-line-feed
-		/// </summary>
-		public const char LineFeed = '\n'; // 0xA (LF)
-		
-		/// <summary>
-		/// [25] b-carriage-return
-		/// </summary>
-		public const char CarriageReturn = '\r'; // 0xD (CR)
-		
-		/// <summary>
-		/// [26] b-char
-		/// </summary>
-		public const string BreakChar = "\n\r";
-		
-		/// <summary>
-		/// [27] nb-char
-		/// </summary>
-		public bool IsNonBreakChar(char c)
-		{
-			return IsPrintable(c) && BreakChar.IndexOf(c) < 0 && !IsByteOrderMark(c);
-		}
-		
-		/// <summary>
-		/// [28] b-break
-		/// </summary>
-		public bool IsLineBreak(string str)
-		{
-			return str.StartsWith(BreakChar) || str[0] == CarriageReturn || str[0] == LineFeed;
-		}
-		
-		/// <summary>
-		/// [29] b-as-line-feed
-		/// </summary>
-		public bool IsAsLineFeed(string str)
-		{
-			return IsLineBreak(str);
-		}
-		
-		/// <summary>
-		/// [30] b-non-content
-		/// </summary>
-		public bool IsNonContent(string str)
-		{
-			return IsLineBreak(str);
-		}
-		
-		#endregion
-		
-		#region White Space Characters (31-34)
-		
-		/// <summary>
-		/// [31] s-space
-		/// </summary>
-		public const char Space = ' '; // 0x20 (SP)
-		
-		/// <summary>
-		/// [32] s-tab
-		/// </summary>
-		public const char Tab = '\t'; // 0x9
-		
-		/// <summary>
-		/// [33] s-white
-		/// </summary>
-		public const string WhiteSpace = " \t";
-		
-		/// <summary>
-		/// [34] ns-char
-		/// </summary>
-		public bool IsNonSpace(char c)
-		{
-			return IsNonBreakChar(c) && WhiteSpace.IndexOf(c) < 0;
-		}
-		
-		#endregion
-		
-		#region Miscellaneous Characters (35-40)
-		
-		/// <summary>
-		/// [35] ns-dec-digit
-		/// </summary>
-		public bool IsDecimalDigit(char c)
-		{
-			return c >= 0x30 && c <= 0x39;
-		}
-		
-		/// <summary>
-		/// [36] ns-hex-digit
-		/// </summary>
-		public bool IsHexadecimalDigit(char c)
-		{
-			return IsDecimalDigit(c) || (c >= 0x41 && c <= 0x46);
-		}
-		
-		/// <summary>
-		/// [37] ns-ascii-letter
-		/// </summary>
-		public bool IsAsciiLetter(char c)
-		{
-			return (c >= 0x41 && c <= 0x5A) || (c >= 0x61 && c <= 0x7A); // A-Za-z
-		}
-		
-		/// <summary>
-		/// [38] ns-word-char
-		/// </summary>
-		public bool IsWordChar(char c)
-		{
-			return IsDecimalDigit(c) || IsAsciiLetter(c) || c == '-';
-		}
-		
-		/// <summary>
-		/// [39] ns-uri-char
-		/// </summary>
-		public bool IsUriChar(string str)
-		{
-			if (str[0] == '%' && IsHexadecimalDigit(str[1]) && IsHexadecimalDigit(str[2]))
-				return true;
-			return IsWordChar(str[0]) || "#;/?:@&=+$,_.!~*'()[]".IndexOf(str[0]) >= 0;
-		}
-		
-		/// <summary>
-		/// [40] ns-tag-char
-		/// </summary>
-		public bool IsTagChar(string str)
-		{
-			return IsUriChar(str) && str[0] != '!' && FlowIndicator.IndexOf(str[0]) < 0;
-		}
-		
-		#endregion
-		
-		#region Escaped Characters (41-62)
-		
-		/// <summary>
-		/// [41] c-escape
-		/// </summary>
-		public const char Escape = '\\';
-		
-		/// <summary>
-		/// [42] ns-esc-null
-		/// </summary>
-		public const char EscapeNull = '0';
-		
-		/// <summary>
-		/// [43] ns-esc-bell
-		/// </summary>
-		public const char EscapeBell = 'a';
-		
-		/// <summary>
-		/// [44] ns-esc-backspace
-		/// </summary>
-		public const char EscapeBackspace = 'b';
-		
-		/// <summary>
-		/// [45] ns-esc-horizontal-tab
-		/// </summary>
-		public const char EscapeHorizontalTab = 't';
-		
-		/// <summary>
-		/// [46] ns-esc-line-feed
-		/// </summary>
-		public const char EscapeLineFeed = 'n';
-		
-		/// <summary>
-		/// [47] ns-esc-vertical-tab
-		/// </summary>
-		public const char EscapeVerticalTab = 'v';
-		
-		/// <summary>
-		/// [48] ns-esc-form-feed
-		/// </summary>
-		public const char EscapeFormFeed = 'f';
-		
-		/// <summary>
-		/// [49] ns-esc-carriage-return
-		/// </summary>
-		public const char EscapeCarriageReturn = 'r';
-		
-		/// <summary>
-		/// [50] ns-esc-escape
-		/// </summary>
-		public const char EscapeEscape = 'e';
-		
-		/// <summary>
-		/// [51] ns-esc-space
-		/// </summary>
-		public const char EscapeSpace = ' '; // 0x20
-		
-		/// <summary>
-		/// [52] ns-esc-double-quote
-		/// </summary>
-		public const char EscapeDoubleQuote = '"';
-		
-		/// <summary>
-		/// [53] ns-esc-slash
-		/// </summary>
-		public const char EscapeSlash = '/';
-		
-		/// <summary>
-		/// [54] ns-esc-backslash
-		/// </summary>
-		public const char EscapeBackslash = '\\';
-		
-		/// <summary>
-		/// [55] ns-esc-next-line
-		/// </summary>
-		public const char EscapeNextLine = 'N';
-		
-		/// <summary>
-		/// [56] ns-esc-non-breaking-space
-		/// </summary>
-		public const char EscapeNonBreakingSpace = '_';
-		
-		/// <summary>
-		/// [57] ns-esc-line-separator
-		/// </summary>
-		public const char EscapeLineSeparator = 'L';
-		
-		/// <summary>
-		/// [58] ns-esc-paragraph-separator
-		/// </summary>
-		public const char EscapeParagrahpSeparator = 'P';
-		
-		/// <summary>
-		/// [59] ns-esc-8-bit
-		/// </summary>
-		public const char Escape8Bit = 'x';
-		
-		/// <summary>
-		/// [60] ns-esc-16-bit
-		/// </summary>
-		public const char Escape16Bit = 'u';
-		
-		/// <summary>
-		/// [61] ns-esc-32-bit
-		/// </summary>
-		public const char Escape32Bit = 'U';
-		
-		/// <summary>
-		/// [62] c-ns-esc-char
-		/// </summary>
-		public bool IsEscapedCharacter(string str)
-		{
-			return str[0] == Escape && "0abtnvfre \"/\\N_LPxuU".IndexOf(str[1]) >= 0;
-		}
-		
-		#endregion
-		
-		#region 6. Basic Structures
-		
+
+[24]    b-line-feed ::= #xA /* LF */
+[25]    b-carriage-return ::= #xD /* CR */
+[26]    b-char ::= b-line-feed | b-carriage-return
+[27]    nb-char ::= c-printable - b-char - c-byte-order-mark
+
+[28]    b-break ::= ( b-carriage-return b-line-feed ) /* DOS, Windows */
+                    | b-carriage-return               /* MacOS upto 9.x */
+                    | b-line-feed                     /* UNIX, MacOS X */
+
+[29]    b-as-line-feed ::= b-break
+[30]    b-non-content ::= b-break
+
+
+# White Space Characters (31-34) #
+
+[31]    s-space ::= #x20 /* SP */
+[32]    s-tab ::= #x9 /* TAB */
+[33]    s-white ::= s-space | s-tab
+[34]    ns-char ::= nb-char - s-white
+
+
+# Miscellaneous Characters (35-40) #
+
+[35]    ns-dec-digit ::= [#x30-#x39] /* 0-9 */
+[36]    ns-hex-digit ::= ns-dec-digit | [#x41-#x46] /* A-F */ | [#x61-#x66] /* a-f */
+[37]    ns-ascii-letter ::= [#x41-#x5A] /* A-Z */ | [#x61-#x7A] /* a-z */
+[38]    ns-word-char ::= ns-dec-digit | ns-ascii-letter | “-”
+
+[39]    ns-uri-char ::=   “%” ns-hex-digit ns-hex-digit | ns-word-char | “#”
+                        | “;” | “/” | “?” | “:” | “@” | “&” | “=” | “+” | “$” | “,”
+                        | “_” | “.” | “!” | “~” | “*” | “'” | “(” | “)” | “[” | “]”
+
+[40]    ns-tag-char ::= ns-uri-char - “!” - c-flow-indicator
+
+
+# Escaped Characters (41-62) #
+
+[41]    c-escape ::= “\”
+[42]    ns-esc-null ::= “0”                     Escaped ASCII null (#x0) character.
+[43]    ns-esc-bell ::= “a”                     Escaped ASCII bell (#x7) character.
+[44]    ns-esc-backspace ::= “b”                Escaped ASCII backspace (#x8) character.
+
+[45]    ns-esc-horizontal-tab ::= “t” | #x9     Escaped ASCII horizontal tab (#x9) character. This is useful at the
+                                                start or the end of a line to force a leading or trailing tab to become
+                                                part of the content.
+
+[46]    ns-esc-line-feed ::= “n”                Escaped ASCII line feed (#xA) character.
+[47]    ns-esc-vertical-tab ::= “v”             Escaped ASCII vertical tab (#xB) character.
+[48]    ns-esc-form-feed ::= “f”                Escaped ASCII form feed (#xC) character.
+[49]    ns-esc-carriage-return ::= “r”          Escaped ASCII carriage return (#xD) character.
+[50]    ns-esc-escape ::= “e”                   Escaped ASCII escape (#x1B) character.
+
+[51]    ns-esc-space ::= #x20                   Escaped ASCII space (#x20) character. This is useful at the start or
+                                                the end of a line to force a leading or trailing space to become part
+                                                of the content.
+
+[52]    ns-esc-double-quote ::= “"”             Escaped ASCII double quote (#x22).
+[53]    ns-esc-slash ::= “/”                    Escaped ASCII slash (#x2F), for JSON compatibility.
+[54]    ns-esc-backslash ::= “\”                Escaped ASCII back slash (#x5C).
+[55]    ns-esc-next-line ::= “N”                Escaped Unicode next line (#x85) character.
+[56]    ns-esc-non-breaking-space ::= “_”       Escaped Unicode non-breaking space (#xA0) character.
+[57]    ns-esc-line-separator ::= “L”           Escaped Unicode line separator (#x2028) character.
+[58]    ns-esc-paragraph-separator ::= “P”      Escaped Unicode paragraph separator (#x2029) character.
+[59]    ns-esc-8-bit ::= “x”                    Escaped 8-bit Unicode character. ( ns-hex-digit × 2 )
+[60]    ns-esc-16-bit ::= “u”                   Escaped 16-bit Unicode character. ( ns-hex-digit × 4 )
+[61]    ns-esc-32-bit ::= “U”                   Escaped 32-bit Unicode character. ( ns-hex-digit × 8 )
+
+[62]    c-ns-esc-char ::= “\”
+                          ( ns-esc-null | ns-esc-bell | ns-esc-backspace
+                          | ns-esc-horizontal-tab | ns-esc-line-feed
+                          | ns-esc-vertical-tab | ns-esc-form-feed
+                          | ns-esc-carriage-return | ns-esc-escape | ns-esc-space
+                          | ns-esc-double-quote | ns-esc-slash | ns-esc-backslash
+                          | ns-esc-next-line | ns-esc-non-breaking-space
+                          | ns-esc-line-separator | ns-esc-paragraph-separator
+                          | ns-esc-8-bit | ns-esc-16-bit | ns-esc-32-bit )
+
+
+# Basic Structures (63 - 103) #
+
 		// [63] s-indent(n) ::= s-space * n
 		// [64] s-indent(<n) ::= s-space * m /* Where m < n */
 		// [65] s-indent(<=n) ::= s-space * m /* Where m <= n */
-		// [66] s-separate-in-line ::= s-white+ | /* Start of line */
+
+[66]    s-separate-in-line ::= s-white+ | /* Start of line */
+
 		// [67] s-line-prefix(n,c) ::= c = block-out => s-block-line-prefix(n)
 		//                             c = block-in  => s-block-line-prefix(n)
 		//                             c = flow-out  => s-flow-line-prefix(n)
@@ -327,11 +160,13 @@ X+,X-Y+     A production as above, with the additional property that the matched
 		// [72] b-as-space ::= b-break
 		// [73] b-l-folded(n,c) ::= b-l-trimmed(n,c) | b-as-space
 		// [74] s-flow-folded(n) ::= s-separate-in-line? b-l-folded(n,flow-in) s-flow-line-prefix(n)
-		// [75] c-nb-comment-text ::= "#" nb-char*
-		// [76] b-comment ::= b-non-content | /* End of file */
-		// [77] s-b-comment ::= ( s-separate-in-line c-nb-comment-text? )? b-comment
-		// [78] l-comment ::= s-separate-in-line c-nb-comment-text? b-comment
-		// [79] s-l-comments ::= ( s-b-comment | /* Start of line */ ) l-comment*
+
+[75]    c-nb-comment-text ::= "#" nb-char*
+[76]    b-comment ::= b-non-content | /* End of file */
+[77]    s-b-comment ::= ( s-separate-in-line c-nb-comment-text? )? b-comment
+[78]    l-comment ::= s-separate-in-line c-nb-comment-text? b-comment
+[79]    s-l-comments ::= ( s-b-comment | /* Start of line */ ) l-comment*
+
 		// [80] s-separate(n,c) ::= c = block-out => s-separate-lines(n)
 		//                          c = block-in  => s-separate-lines(n)
 		//                          c = flow-out  => s-separate-lines(n)
@@ -339,20 +174,22 @@ X+,X-Y+     A production as above, with the additional property that the matched
 		//                          c = block-key => s-separate-in-line
 		//                          c = flow-key  => s-separate-in-line
 		// [81] s-separate-lines(n) ::= ( s-l-comments s-flow-line-prefix(n) ) | s-separate-in-line
-		// [82] l-directive ::= "%" ( ns-yaml-directive | ns-tag-directive | ns-reserved-directive ) s-l-comments
-		// [83] ns-reserved-directive ::= ns-directive-name ( s-separate-in-line ns-directive-parameter )*
-		// [84] ns-directive-name ::= ns-char+
-		// [85] ns-directive-parameter ::= ns-char+
-		// [86] ns-yaml-directive ::= "Y" "A" "M" "L" s-separate-in-line ns-yaml-version
-		// [87] ns-yaml-version ::= ns-dec-digit+ "." ns-dec-digit+
-		// [88] ns-tag-directive ::= "T" "A" "G" s-separate-in-line c-tag-handle s-separate-in-line ns-tag-prefix
-		// [89] c-tag-handle ::= c-named-tag-handle | c-secondary-tag-handle | c-primary-tag-handle
-		// [90] c-primary-tag-handle ::= "!"
-		// [91] c-secondary-tag-handle ::= "!" "!"
-		// [92] c-named-tag-handle ::= "!" ns-word-char+ "!"
-		// [93] ns-tag-prefix ::= c-ns-local-tag-prefix | ns-global-tag-prefix
-		// [94] c-ns-local-tag-prefix ::= "!" ns-uri-char*
-		// [95] ns-global-tag-prefix ::= ns-tag-char ns-uri-char*
+
+[82]    l-directive ::= "%" ( ns-yaml-directive | ns-tag-directive | ns-reserved-directive ) s-l-comments
+[83]    ns-reserved-directive ::= ns-directive-name ( s-separate-in-line ns-directive-parameter )*
+[84]    ns-directive-name ::= ns-char+
+[85]    ns-directive-parameter ::= ns-char+
+[86]    ns-yaml-directive ::= "Y" "A" "M" "L" s-separate-in-line ns-yaml-version
+[87]    ns-yaml-version ::= ns-dec-digit+ "." ns-dec-digit+
+[88]    ns-tag-directive ::= "T" "A" "G" s-separate-in-line c-tag-handle s-separate-in-line ns-tag-prefix
+[89]    c-tag-handle ::= c-named-tag-handle | c-secondary-tag-handle | c-primary-tag-handle
+[90]    c-primary-tag-handle ::= "!"
+[91]    c-secondary-tag-handle ::= "!" "!"
+[92]    c-named-tag-handle ::= "!" ns-word-char+ "!"
+[93]    ns-tag-prefix ::= c-ns-local-tag-prefix | ns-global-tag-prefix
+[94]    c-ns-local-tag-prefix ::= "!" ns-uri-char*
+[95]    ns-global-tag-prefix ::= ns-tag-char ns-uri-char*
+
 		// [96] c-ns-properties(n,c) ::= ( c-ns-tag-property ( s-separate(n,c) c-ns-anchor-property )? ) | ( c-ns-anchor-property ( s-separate(n,c) c-ns-tag-property )? )
 		// [97] c-ns-tag-property ::= c-verbatim-tag | c-ns-shorthand-tag | c-non-specific-tag
 		// [98] c-verbatim-tag ::= "!" "<" ns-uri-char+ ">"
@@ -361,10 +198,9 @@ X+,X-Y+     A production as above, with the additional property that the matched
 		// [101] c-ns-anchor-property ::= "&" ns-anchor-name
 		// [102] ns-anchor-char ::= ns-char - c-flow-indicator
 		// [103] ns-anchor-name ::= ns-anchor-char+
-		
-		#endregion
-		
-		#region 7. Flow Styles
+
+
+# Flow Styles (104-161) #
 		
 		// [104] c-ns-alias-node ::= "*" ns-anchor-name
 		// [105] e-scalar ::= /* Empty */
@@ -439,11 +275,10 @@ X+,X-Y+     A production as above, with the additional property that the matched
 		// [159] ns-flow-yaml-node(n,c) ::= c-ns-alias-node | ns-flow-yaml-content(n,c) | ( c-ns-properties(n,c) ( ( s-separate(n,c) ns-flow-yaml-content(n,c) ) | e-scalar ) )
 		// [160] c-flow-json-node(n,c) ::= ( c-ns-properties(n,c) s-separate(n,c) )? c-flow-json-content(n,c)
 		// [161] ns-flow-node(n,c) ::= c-ns-alias-node | ns-flow-content(n,c) | ( c-ns-properties(n,c) ( ( s-separate(n,c) ns-flow-content(n,c) ) | e-scalar ) )
-		
-		#endregion
-		
-		#region 8. Block Styles
-		
+
+
+# Block Styles (162-201) #
+
 		// [162] c-b-block-header(m,t) ::= ( ( c-indentation-indicator(m) c-chomping-indicator(t) ) | ( c-chomping-indicator(t) c-indentation-indicator(m) ) ) s-b-comment
 		// [163] c-indentation-indicator(m) ::= ns-dec-digit => m = ns-dec-digit - #x30
 		//                                      /* Empty */  => m = auto-detect()
@@ -492,8 +327,6 @@ X+,X-Y+     A production as above, with the additional property that the matched
 		// [200] s-l+block-collection(n,c) ::= ( s-separate(n+1,c) c-ns-properties(n+1,c) )? s-l-comments ( l+block-sequence(seq-spaces(n,c)) | l+block-mapping(n) )
 		// [201] seq-spaces(n,c) ::= c = block-out => n-1
 		//                           c = block-in  => n
-		
-		#endregion
 
 
 # YAML Character Stream #
