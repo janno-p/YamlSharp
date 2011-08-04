@@ -59,6 +59,9 @@
     <Compile Include="Tokens\StreamStartToken.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\StreamEndToken.cs" />
+    <Compile Include="Tokens\DirectivesStartToken.cs" />
+    <Compile Include="Tokens\DirectivesEndToken.cs" />
+    <Compile Include="Tokens\DirectiveToken.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -81,6 +84,7 @@
     <Reference Include="Irony, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47">
       <HintPath>..\Dependencies\Irony.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
