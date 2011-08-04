@@ -1,160 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿# Naming Conventions #
 
-namespace YamlSharp
-{
-	public class Spec
-	{
-		// e-	A production matching no characters
-		// c-	A production starting and ending with a special character
-		// b-	A production matching single line break
-		// nb-	A production starting and ending with a non-break character
-		// s-	A production starting and ending with a white space character
-		// ns-	A production starting and ending with a non-space character
-		// l-	A production matching complete line(s)
-		// X-Y-	A production string with an x- character and ending with a y- character, where x- and y- are any of the above prefixes
-		// X+,X-Y+	A production as above, with the additional property that the matched content identation level is greater than the specified n parameter
-		
-		#region Character Set (1-2)
-		
-		/// <summary>
-		/// [1] c-printable
-		/// </summary>
-		public bool IsPrintable(char c)
-		{
-			return c == 0x9 || c == 0xA || c == 0xD || (c >= 0x20 && c <= 0x7E) || /* 8 bit */
-				c == 0x85 || (c >= 0xA0 && c <= 0xD7FF) || 	(c >= 0xE000 && c <= 0xFFFD) || /* 16 bit */
-				(c >= 0x10000 && c <= 0x10FFFF); /* 32 bit */
-		}
-		
-		/// <summary>
-		/// [2] nb-json
-		/// </summary>
-		public bool IsJson(char c)
-		{
-			return c == 0x9 || (c >= 0x20 && c <= 0x10FFFF);
-		}
-		
-		#endregion
-		
-		#region Character Encodings (3)
-		
-		/// <summary>
-		/// [3] c-byte-order-mark
-		/// </summary>
-		public bool IsByteOrderMark(char c)
-		{
-			return c == 0xFEFF;
-		}
-		
-		#endregion
-		
-		#region Indicator Characters (4-23)
-		
-		/// <summary>
-		/// [4] c-sequence-entry
-		/// </summary>
-		public const char SequenceEntry = '-'; // 0x2D
-		
-		/// <summary>
-		/// [5] c-mapping-key
-		/// </summary>
-		public const char MappingKey = '?'; // 0x3F
-		
-		/// <summary>
-		/// [6] c-mapping-value
-		/// </summary>
-		public const char MappingValue = ':'; // 0x3A
-		
-		/// <summary>
-		/// [7] c-collect-entry
-		/// </summary>
-		public const char CollectEntry = ','; // 0x2C
-		
-		/// <summary>
-		/// [8] c-sequence-start
-		/// </summary>
-		public const char SequenceStart = '['; // 0x5B
-		
-		/// <summary>
-		/// [9] c_sequence-end
-		/// </summary>
-		public const char SequenceEnd = ']'; // 0x5D
-		
-		/// <summary>
-		/// [10] c-mapping-start
-		/// </summary>
-		public const char MappingStart = '{'; // 0x7B
-		
-		/// <summary>
-		/// [11] c-mapping-end
-		/// </summary>
-		public const char MappingEnd = '}'; // 0x7D
-		
-		/// <summary>
-		/// [12] c-comment
-		/// </summary>
-		public const char Comment = '#'; // 0x23
-		
-		/// <summary>
-		/// [13] c-anchor
-		/// </summary>
-		public const char Anchor = '&'; // 0x26
-		
-		/// <summary>
-		/// [14] c-alias
-		/// </summary>
-		public const char Alias = '*'; // 0x2A
-		
-		/// <summary>
-		/// [15] c-tag
-		/// </summary>
-		public const char Tag = '!'; // 0x21
-		
-		/// <summary>
-		/// [16] c-literal
-		/// </summary>
-		public const char Literal = '|'; // 0x7C
-		
-		/// <summary>
-		/// [17] c-folded
-		/// </summary>
-		public const char Folded = '>'; // 0x3E
-		
-		/// <summary>
-		/// [18] c-single-quote
-		/// </summary>
-		public const char SingleQuote = '\''; // 0x27
-		
-		/// <summary>
-		/// [19] c-double-quote
-		/// </summary>
-		public const char DoubleQuote = '"'; // 0x22
-		
-		/// <summary>
-		/// [20] c-directive
-		/// </summary>
-		public const char Directive = '%'; // 0x25
-		
-		/// <summary>
-		/// [21] c-reserved
-		/// </summary>
-		public const string Reserved = "@`"; // 0x40 && 0x60
-		
-		/// <summary>
-		/// [22] c-indicator
-		/// </summary>
-		public const string Indicator = "-?:,[]{}#&*!|>'\"%@`";
-		
-		/// <summary>
-		/// [23] c-flow-indicator
-		/// </summary>
-		public const string FlowIndicator = ",[]{}";
-		
-		#endregion
-		
-		#region Line Break Characters (24-30)
+e-          A production matching no characters
+c-          A production starting and ending with a special character
+b-          A production matching single line break
+nb-         A production starting and ending with a non-break character
+s-          A production starting and ending with a white space character
+ns-         A production starting and ending with a non-space character
+l-          A production matching complete line(s)
+
+X-Y-        A production string with an x- character and ending with a y- character, where x- and y- are any of the
+            above prefixes
+
+X+,X-Y+     A production as above, with the additional property that the matched content identation level is greater
+            than the specified n parameter
+
+
+# Character Set (1-2) #
+
+[1]     c-printable ::=   #x9 | #xA | #xD | [#x20-#x7E]          /* 8 bit */
+                        | #x85 | [#xA0-#xD7FF] | [#xE000-#xFFFD] /* 16 bit */
+                        | [#x10000-#x10FFFF]                     /* 32 bit */
+
+[2]     nb-json ::= #x9 | [#x20-#x10FFFF]
+
+
+# Character Encodings (3) #
+
+[3]     c-byte-order-mark ::= #xFEFF
+
+
+# Indicator Characters (4-23) #
+
+[4]     c-sequence-entry ::= “-”        A “-” (#x2D, hyphen) denotes a block sequence entry.
+[5]     c-mapping-key ::= “?”           A “?” (#x3F, question mark) denotes a mapping key.
+[6]     c-mapping-value ::= “:”         A “:” (#x3A, colon) denotes a mapping value.
+[7]     c-collect-entry ::= “,”         A “,” (#x2C, comma) ends a flow collection entry.
+[8]     c-sequence-start ::= “[”        A “[” (#x5B, left bracket) starts a flow sequence.
+[9]     c-sequence-end ::= “]”          A “]” (#x5D, right bracket) ends a flow sequence.
+[10]    c-mapping-start ::= “{”         A “{” (#x7B, left brace) starts a flow mapping.
+[11]    c-mapping-end ::= “}”           A “}” (#x7D, right brace) ends a flow mapping.
+[12]    c-comment ::= “#”               An “#” (#x23, octothorpe, hash, sharp, pound, number sign) denotes a comment.
+[13]    c-anchor ::= “&”                An “&” (#x26, ampersand) denotes a node’s anchor property.
+[14]    c-alias ::= “*”                 An “*” (#x2A, asterisk) denotes an alias node.
+
+[15]    c-tag ::= “!”                   The “!” (#x21, exclamation) is heavily overloaded for specifying node tags. It
+                                        is used to denote tag handles used in tag directives and tag properties; to
+                                        denote local tags; and as the non-specific tag for non-plain scalars.
+
+[16]    c-literal ::= “|”               A “|” (7C, vertical bar) denotes a literal block scalar.
+[17]    c-folded ::= “>”                A “>” (#x3E, greater than) denotes a folded block scalar.
+[18]    c-single-quote ::= “'”          An “'” (#x27, apostrophe, single quote) surrounds a singlequoted flow scalar.
+[19]    c-double-quote ::= “"”          A “"” (#x22, double quote) surrounds a double-quoted flow scalar.
+[20]    c-directive ::= “%”             A “%” (#x25, percent) denotes a directive line.
+[21]    c-reserved ::= “@” | “`”        The “@” (#x40, at) and “`” (#x60, grave accent) are reserved for future use.
+
+[22]    c-indicator ::=   “-” | “?” | “:” | “,” | “[” | “]” | “{” | “}”
+                        | “#” | “&” | “*” | “!” | “|” | “>” | “'” | “"”
+                        | “%” | “@” | “`”
+
+[23]    c-flow-indicator ::= “,” | “[” | “]” | “{” | “}”
+
+
+# Line Break Characters (24-30) #
 		
 		/// <summary>
 		/// [24] b-line-feed
@@ -587,25 +494,22 @@ namespace YamlSharp
 		//                           c = block-in  => n
 		
 		#endregion
-		
-		#region 9. YAML Character Stream
-		
-		// [202] l-document-prefix ::= c-byte-order-mark? l-comment*
-		// [203] c-directives-end ::= "-" "-" "-"
-		// [204] c-document-end ::= "." "." "."
-		// [205] l-document-suffix ::= c-document-end s-l-comments
-		// [206] c-forbidden ::= /* Start of line */ ( c-directives-end | c-document-end ) ( b-char | s-white | /* End of file */ )
-		// [207] l-bare-document ::= s-l+block-node(-1,block-in) /* Excluding c-forbidden content */
-		// [208] l-explicit-document ::= c-directives-end ( l-bare-document | ( e-node s-l-comments ) )
-		// [209] l-directive-document ::= l-directive+ l-explicit-document
-		// [210] l-any-document ::= l-directive-document | l-explicit-document | l-bare-document
-		// [211] l-yaml-stream ::= l-document-prefix* l-any-document? ( l-document-suffix+ l-document-prefix* l-any-document? | l-document-prefix* l-explicit-document? )*
-		
-		#endregion
 
-        public static bool IsDocumentPrefix(Stream stream)
-        {
-            return stream.ReadByte() == 0;
-        }
-	}
-}
+
+# YAML Character Stream #
+
+[202]   l-document-prefix ::= c-byte-order-mark? l-comment*
+[203]   c-directives-end ::= "-" "-" "-"
+[204]   c-document-end ::= "." "." "."
+[205]   l-document-suffix ::= c-document-end s-l-comments
+
+[206]   c-forbidden ::= /* Start of line */ ( c-directives-end | c-document-end )
+                        ( b-char | s-white | /* End of file */ )
+
+[207]   l-bare-document ::= s-l+block-node(-1,block-in) /* Excluding c-forbidden content */
+[208]   l-explicit-document ::= c-directives-end ( l-bare-document | ( e-node s-l-comments ) )
+[209]   l-directive-document ::= l-directive+ l-explicit-document
+[210]   l-any-document ::= l-directive-document | l-explicit-document | l-bare-document
+
+[211]   l-yaml-stream ::= l-document-prefix* l-any-document? ( l-document-suffix+ l-document-prefix* l-any-document?
+                          | l-document-prefix* l-explicit-document? )*

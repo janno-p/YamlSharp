@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Spec.cs" />
+    <None Include="Spec.txt" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="YamlDocument.cs" />
     <Compile Include="YamlReader.cs" />
