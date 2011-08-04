@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,13 +13,10 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <StartupObject>
-    </StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
-    <TargetFrameworkProfile />
     <PublishUrl>http://localhost/YamlSharp.Test/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -90,9 +87,10 @@
   <ItemGroup>
     <Compile Include="StringUtilTest.cs" />
     <Compile Include="YamlReaderTest.cs" />
+    <Compile Include="ScannerTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.5.7.10213, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework, Version=2.5.7.10213, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\nunit.framework.dll</HintPath>
     </Reference>
@@ -102,5 +100,20 @@
       <Project>{42E0CCDD-BBA5-4AF9-812B-850DE60F73F7}</Project>
       <Name>YamlSharp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestData\utf16be.yml" />
+    <None Include="TestData\utf16be-explicit-bom.yml" />
+    <None Include="TestData\utf16le.yml" />
+    <None Include="TestData\utf16le-explicit-bom.yml" />
+    <None Include="TestData\utf32be.yml" />
+    <None Include="TestData\utf32be-explicit-bom.yml" />
+    <None Include="TestData\utf32le.yml" />
+    <None Include="TestData\utf32le-explicit-bom.yml" />
+    <None Include="TestData\utf8.yml" />
+    <None Include="TestData\utf8-explicit-bom.yml" />
+    <None Include="TestData\example-9.1_document-prefix.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,25 +1,53 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace YamlSharp
 {
-    public class YamlReader
+    public class YamlReader : IDisposable
     {
-        private readonly TextReader reader;
+		private const int MaxBufferSize = 1024;
+
+        private readonly Stream stream;
+		//private readonly Encoding encoding;
+		private readonly byte[] buffer = new byte[MaxBufferSize];
+
+		private int position = 0;
+		private int length = 0;
 
         public YamlReader(string fileName)
-        {
-            reader = new StreamReader(fileName, StringUtil.GetFileEncoding(fileName));
-        }
+			: this(new FileStream(fileName, FileMode.Open))
+        {}
 
-        public IEnumerable<YamlDocument> Read()
-        {
-            var line = reader.ReadLine();
-            while (line != null)
-            {
-                yield return null;
-                line = reader.ReadLine();
-            }
-        }
+		public YamlReader(Stream stream)
+		{
+			this.stream = stream;
+		}
+
+		void IDisposable.Dispose()
+		{
+			if (stream != null)
+				stream.Dispose();
+		}
+
+		public void Peek(int numChars = 1)
+		{
+
+		}
+
+		private void UpdateBuffer()
+		{
+			var numValues = length - position;
+			for (var i = 0; i < numValues; i++)
+				buffer[i] = buffer[position + i];
+
+			byte[] temp = new byte[MaxBufferSize - numValues];
+			var count = stream.Read(temp, 0, temp.Length);
+			if (count == 0)
+				return;
+
+			Array.Copy(temp, 0, buffer, numValues, count);
+		}
     }
 }

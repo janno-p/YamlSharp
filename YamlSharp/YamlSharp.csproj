@@ -54,10 +54,11 @@
     <Compile Include="Spec.cs" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="YamlDocument.cs" />
-    <Compile Include="YamlGrammar.cs" />
     <Compile Include="YamlReader.cs" />
     <Compile Include="Scanner.cs" />
-    <Compile Include="Token.cs" />
+    <Compile Include="Tokens\StreamStartToken.cs" />
+    <Compile Include="Tokens\Token.cs" />
+    <Compile Include="Tokens\StreamEndToken.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -90,4 +91,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Tokens\" />
+  </ItemGroup>
 </Project>
