@@ -51,17 +51,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Spec.txt" />
+    <None Include="README" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="YamlDocument.cs" />
     <Compile Include="YamlReader.cs" />
     <Compile Include="Scanner.cs" />
-    <Compile Include="Tokens\StreamStartToken.cs" />
-    <Compile Include="Tokens\Token.cs" />
-    <Compile Include="Tokens\StreamEndToken.cs" />
-    <Compile Include="Tokens\DirectivesStartToken.cs" />
-    <Compile Include="Tokens\DirectivesEndToken.cs" />
-    <Compile Include="Tokens\DirectiveToken.cs" />
+    <Compile Include="Tokens.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

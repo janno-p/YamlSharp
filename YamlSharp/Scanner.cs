@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using YamlSharp.Tokens;
 using System;
 using System.Text.RegularExpressions;
@@ -11,8 +12,7 @@ namespace YamlSharp
 	{
 		private readonly StreamReader reader;
 
-		public string CurrentLine { get; private set; }
-		public int Indent { get; private set; }
+	    private string currentLine;
 
 		public Scanner(StreamReader reader)
 		{
@@ -25,6 +25,7 @@ namespace YamlSharp
 
 			yield return new StreamStartToken(0, 0);
 
+		    currentLine = string.Empty;
 			while (!reader.EndOfStream)
 			{
 				ReadDocumentPrefix();
@@ -57,21 +58,7 @@ namespace YamlSharp
 
 			// TODO : BOM - maybe custom stream reader for yaml which recognizes byte order marks inside stream
 
-			string line;
-			while ((line = reader.ReadLine()) != null)
-			{
-				var position = 0;
-				CurrentLine = line;
-
-				// s-separate-in-line
-				while (position < line.Length && (line[position] == ' ' || line[position] == '\t'))
-					position++;
-				if (position >= line.Length)
-					continue;
-
-				if (line[position] != '#')
-					break;
-			}
+		    SkipWhitespaceAndComments();
 		}
 
 		private IEnumerable<Token> ReadDocument()
@@ -91,6 +78,11 @@ namespace YamlSharp
 
             yield return new DirectivesEndToken(0, 0);
 
+		    yield return new DocumentStartToken(0, 0);
+
+            foreach (var documentToken in ReadDocumentContent())
+                yield return documentToken;
+
 			// [208] l-explicit-document ::= c-directives-end ( l-bare-document | ( e-node s-l-comments ) )
 			// [207] l-bare-document ::= s-l+block-node(-1,block-in) /* Excluding c-forbidden content */
 
@@ -98,15 +90,38 @@ namespace YamlSharp
 			// [205] l-document-suffix ::= c-document-end s-l-comments
 			// [206] c-forbidden ::= /* Start of line */ ( c-directives-end | c-document-end ) ( b-char | s-white | /* End of file */ )
 
-
-
-			yield break;
+			yield return new DocumentEndToken(0, 0);
 		}
+
+        private IEnumerable<Token> ReadDocumentContent()
+        {
+            var contentBuilder = new StringBuilder();
+
+            while (currentLine != null)
+            {
+                if (currentLine.StartsWith("---") && (currentLine.Length == 3 || (currentLine[3] == ' ' || currentLine[3] == '\t')))
+                    break;
+
+                // [205] l-document-suffix ::= c-document-end s-l-comments
+                if (currentLine.StartsWith("...") && (currentLine.Length == 3 || (currentLine[3] == ' ' || currentLine[3] == '\t')))
+                {
+                    currentLine = currentLine.Substring(3);
+                    if (!SkipWhitespaceAndComments())
+                        throw new Exception("Unexpected token");
+                    break;
+                }
+
+                contentBuilder.AppendLine(currentLine);
+                currentLine = reader.ReadLine();
+            }
+
+            yield return new DocumentContentToken(0, 0, contentBuilder.ToString());
+        }
 
         private IEnumerable<Token> ReadDirectives()
         {
             var hasDirectives = false;
-            while (CurrentLine[0] == '%')
+            while (currentLine[0] == '%')
             {
                 yield return ReadDirective();
                 hasDirectives = true;
@@ -114,8 +129,11 @@ namespace YamlSharp
 
             // [203] c-directives-end ::= “-” “-” “-”
 
-            if (CurrentLine.StartsWith("---"))
-                CurrentLine = CurrentLine.Length > 3 ? CurrentLine.Substring(3) : reader.ReadLine();
+            if (currentLine.StartsWith("---") && (currentLine.Length == 3 || (currentLine.Length > 3 && currentLine[3] == ' ' || currentLine[3] == '\t')))
+            {
+                currentLine = currentLine.Substring(3);
+                SkipWhitespaceAndComments();
+            }
             else if (hasDirectives)
                 throw new Exception("Directives end marker missing");
         }
@@ -124,13 +142,13 @@ namespace YamlSharp
         {
             // [82] l-directive ::= “%” ( ns-yaml-directive | ns-tag-directive | ns-reserved-directive ) s-l-comments
 
-            CurrentLine = CurrentLine.Substring(1);
-            if (CurrentLine.Length == 0 || CurrentLine[0] == ' ' || CurrentLine[0] == '\t' || Char.IsControl(CurrentLine[0]))
+            currentLine = currentLine.Substring(1);
+            if (currentLine.Length == 0 || currentLine[0] == ' ' || currentLine[0] == '\t' || Char.IsControl(currentLine[0]))
                 throw new Exception("Directive name expected");
 
             Token token;
 
-            var splits = CurrentLine.Split(' ', '\t');
+            var splits = currentLine.Split(' ', '\t');
             if (splits[0].Equals("YAML"))
             {
                 // [86] ns-yaml-directive ::= “Y” “A” “M” “L” s-separate-in-line ns-yaml-version
@@ -200,22 +218,26 @@ namespace YamlSharp
             // [79] s-l-comments ::= ( s-b-comment | /* Start of line */ ) l-comment*
             // [77] s-b-comment ::= ( s-separate-in-line c-nb-comment-text? )? b-comment
 
-            while ((CurrentLine = reader.ReadLine()) != null)
-            {
-                var position = 0;
-
-                // s-separate-in-line
-                while (position < CurrentLine.Length && (CurrentLine[position] == ' ' || CurrentLine[position] == '\t'))
-                    position++;
-
-                if (position >= CurrentLine.Length)
-                    continue;
-
-                if (CurrentLine[position] != '#')
-                    break;
-            }
+            currentLine = reader.ReadLine();
+            SkipWhitespaceAndComments();
 
             return token;
+        }
+
+        private bool SkipWhitespaceAndComments()
+        {
+            var changedRow = false;
+            while (currentLine != null)
+            {
+                var position = 0;
+                while (position < currentLine.Length && (currentLine[position] == ' ' || currentLine[position] == '\t'))
+                    position++;
+                if (position < currentLine.Length && currentLine[position] != '#')
+                    break;
+                currentLine = reader.ReadLine();
+                changedRow = true;
+            }
+            return changedRow;
         }
 	}
 }
