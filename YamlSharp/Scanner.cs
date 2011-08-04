@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using YamlSharp.Tokens;
 using System;
 using System.Text.RegularExpressions;
@@ -79,6 +80,8 @@ namespace YamlSharp
 
             yield return new DirectivesStartToken(0, 0);
 
+            // [209] l-directive-document ::= l-directive+ l-explicit-document
+
             foreach (var directiveToken in ReadDirectives())
                 yield return directiveToken;
 
@@ -88,13 +91,9 @@ namespace YamlSharp
 
             yield return new DirectivesEndToken(0, 0);
 
-
-
-			// [209] l-directive-document ::= l-directive+ l-explicit-document
 			// [208] l-explicit-document ::= c-directives-end ( l-bare-document | ( e-node s-l-comments ) )
 			// [207] l-bare-document ::= s-l+block-node(-1,block-in) /* Excluding c-forbidden content */
 
-			// [203] c-directives-end ::= “-” “-” “-”
 			// [204] c-document-end ::= “.” “.” “.”
 			// [205] l-document-suffix ::= c-document-end s-l-comments
 			// [206] c-forbidden ::= /* Start of line */ ( c-directives-end | c-document-end ) ( b-char | s-white | /* End of file */ )
@@ -112,6 +111,8 @@ namespace YamlSharp
                 yield return ReadDirective();
                 hasDirectives = true;
             }
+
+            // [203] c-directives-end ::= “-” “-” “-”
 
             if (CurrentLine.StartsWith("---"))
                 CurrentLine = CurrentLine.Length > 3 ? CurrentLine.Substring(3) : reader.ReadLine();
@@ -186,9 +187,8 @@ namespace YamlSharp
                     if (splits[i][0] == '#')
                         break;
 
-                    foreach (var c in splits[i])
-                        if (Char.IsControl(c))
-                            throw new Exception(string.Format("Invalid character in directive {0}", i == 0 ? "name" : "parameter"));
+                    if (splits[i].Any(Char.IsControl))
+                        throw new Exception(string.Format("Invalid character in directive {0}", i == 0 ? "name" : "parameter"));
 
                     if (i != 0)
                         parameters.Add(splits[i]);
