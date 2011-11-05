@@ -26,7 +26,7 @@ namespace YamlSharp.Test
 
             foreach (var testFile in testFiles)
             {
-                var fileName = string.Format("../../TestData/{0}", testFile);
+                var fileName = string.Format(Path.Combine("..", "..", "TestData", testFile));
                 using (TextReader reader = new StreamReader(fileName, StringUtil.GetFileEncoding(fileName)))
                     Assert.AreEqual("test", reader.ReadLine());
             }
@@ -35,9 +35,7 @@ namespace YamlSharp.Test
 		[Test]
 		public void Katse()
 		{
-			var fileName = "../../TestData/utf32le-explicit-bom.yml";
-			
-			using (var s = File.OpenRead(fileName))
+            using (var s = File.OpenRead(Path.Combine("..", "..", "TestData", "utf32le-explicit-bom.yml")))
 			{
 				s.ReadByte(); s.ReadByte(); s.ReadByte(); s.ReadByte();
 				s.ReadByte(); s.ReadByte(); s.ReadByte(); s.ReadByte();

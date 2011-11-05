@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="README" />
+    <None Include="README.md" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="YamlDocument.cs" />
     <Compile Include="YamlReader.cs" />

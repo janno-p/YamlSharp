@@ -12,7 +12,7 @@ namespace YamlSharp.Test
 		[Test]
 		public void ReadDocumentPrefix()
 		{
-			using (var reader = new StreamReader(string.Format("TestData{0}example-9.1_document-prefix.yml", Path.DirectorySeparatorChar)))
+			using (var reader = new StreamReader(Path.Combine("TestData", "example-9.1_document-prefix.yml")))
 			{
 				var scanner = new Scanner(reader);
 			    var tokens = scanner.ReadTokens().ToList();
@@ -29,7 +29,7 @@ namespace YamlSharp.Test
         [Test]
         public void ReadReservedDirective()
         {
-            using (var reader = new StreamReader(string.Format("TestData{0}example-6.13_reserved-directives.yml", Path.DirectorySeparatorChar)))
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-6.13_reserved-directives.yml")))
             {
                 var scanner = new Scanner(reader);
                 var tokens = scanner.ReadTokens().ToList();
@@ -63,7 +63,7 @@ namespace YamlSharp.Test
         [Test]
         public void ReadYamlDirective()
         {
-            using (var reader = new StreamReader(string.Format("TestData{0}example-6.14_yaml-directive.yml", Path.DirectorySeparatorChar)))
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-6.14_yaml-directive.yml")))
             {
                 var scanner = new Scanner(reader);
                 var tokens = scanner.ReadTokens().ToList();
@@ -88,7 +88,7 @@ namespace YamlSharp.Test
         [Test]
         public void ReadInvalidRepeatedYamlDirective()
         {
-            using (var reader = new StreamReader(string.Format("TestData{0}example-6.15_invalid-repeated-yaml-directive.yml", Path.DirectorySeparatorChar)))
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-6.15_invalid-repeated-yaml-directive.yml")))
             {
                 var scanner = new Scanner(reader);
                 var tokens = scanner.ReadTokens().ToList();
@@ -122,7 +122,7 @@ namespace YamlSharp.Test
         [Test]
         public void ReadTagDirective()
         {
-            using (var reader = new StreamReader(string.Format("TestData{0}example-6.16_tag-directive.yml", Path.DirectorySeparatorChar)))
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-6.16_tag-directive.yml")))
             {
                 var scanner = new Scanner(reader);
                 var tokens = scanner.ReadTokens().ToList();
@@ -148,7 +148,7 @@ namespace YamlSharp.Test
         [Test]
         public void ReadInvalidRepeatedTagDirective()
         {
-            using (var reader = new StreamReader(string.Format("TestData{0}example-6.17_invalid-repeated-tag-directive.yml", Path.DirectorySeparatorChar)))
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-6.17_invalid-repeated-tag-directive.yml")))
             {
                 var scanner = new Scanner(reader);
                 var tokens = scanner.ReadTokens().ToList();
@@ -184,7 +184,7 @@ namespace YamlSharp.Test
         [Test]
         public void ReadSecondaryTagHandle()
         {
-            using (var reader = new StreamReader(string.Format("TestData{0}example-6.19_secondary-tag-handle.yml", Path.DirectorySeparatorChar)))
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-6.19_secondary-tag-handle.yml")))
             {
                 var scanner = new Scanner(reader);
                 var tokens = scanner.ReadTokens().ToList();
@@ -210,7 +210,7 @@ namespace YamlSharp.Test
         [Test]
         public void ReadTagHandles()
         {
-            using (var reader = new StreamReader(string.Format("TestData{0}example-6.20_tag-handles.yml", Path.DirectorySeparatorChar)))
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-6.20_tag-handles.yml")))
             {
                 var scanner = new Scanner(reader);
                 var tokens = scanner.ReadTokens().ToList();
@@ -236,7 +236,7 @@ namespace YamlSharp.Test
         [Test]
         public void ReadLocalTagPrefix()
         {
-            using (var reader = new StreamReader(string.Format("TestData{0}example-6.21_local-tag-prefix.yml", Path.DirectorySeparatorChar)))
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-6.21_local-tag-prefix.yml")))
             {
                 var scanner = new Scanner(reader);
                 var tokens = scanner.ReadTokens().ToList();
@@ -279,7 +279,7 @@ namespace YamlSharp.Test
         [Test]
         public void ReadGlobalTagPrefix()
         {
-            using (var reader = new StreamReader(string.Format("TestData{0}example-6.22_global-tag-prefix.yml", Path.DirectorySeparatorChar)))
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-6.22_global-tag-prefix.yml")))
             {
                 var scanner = new Scanner(reader);
                 var tokens = scanner.ReadTokens().ToList();
@@ -305,7 +305,7 @@ namespace YamlSharp.Test
         [Test, ExpectedException(typeof(Exception), ExpectedMessage = "Directives end marker missing")]
         public void ReadDirectivesEndTagMissing()
         {
-            using (var reader = new StreamReader(string.Format("TestData{0}directives-end-tag-missing.yml", Path.DirectorySeparatorChar)))
+            using (var reader = new StreamReader(Path.Combine("TestData", "directives-end-tag-missing.yml")))
             {
                 new Scanner(reader).ReadTokens().ToList();
 
