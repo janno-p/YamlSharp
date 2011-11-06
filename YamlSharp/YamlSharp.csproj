@@ -50,6 +50,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Graph\MappingNode.cs" />
+    <Compile Include="Graph\Node.cs" />
+    <Compile Include="Graph\ScalarNode.cs" />
+    <Compile Include="Graph\SequenceNode.cs" />
+    <Compile Include="Graph\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="README.md" />
     <Compile Include="StringUtil.cs" />

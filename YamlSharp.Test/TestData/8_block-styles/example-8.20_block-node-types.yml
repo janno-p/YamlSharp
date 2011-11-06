@@ -1,0 +1,6 @@
+﻿-
+  "flow in block"
+- >
+ Block scalar
+- !!map # Block collection
+  foo : bar

@@ -10,9 +10,30 @@ namespace YamlSharp
 {
 	public class Scanner
 	{
+        private class Cursor
+        {
+            public int Row { get; set; }
+            public int Column { get; set; }
+
+            public void NextLine()
+            {
+                Row++;
+                Column = 0;
+            }
+
+            public void Reset()
+            {
+                Row = 0;
+                Column = 0;
+            }
+        }
+
 		private readonly StreamReader reader;
+        private readonly Cursor cursor = new Cursor();
 
 	    private string currentLine;
+
+        private readonly IList<int> identLevels = new List<int> { -1 };
 
 		public Scanner(StreamReader reader)
 		{
@@ -23,9 +44,11 @@ namespace YamlSharp
 		{
 			// [211] l-yaml-stream ::= l-document-prefix* l-any-document? ( l-document-suffix+ l-document-prefix* l-any-document? | l-document-prefix* l-explicit-document? )*
 
+		    currentLine = string.Empty;
+		    cursor.Reset();
+
 			yield return new StreamStartToken(0, 0);
 
-		    currentLine = string.Empty;
 			while (!reader.EndOfStream)
 			{
 				ReadDocumentPrefix();
@@ -80,15 +103,9 @@ namespace YamlSharp
 
 		    yield return new DocumentStartToken(0, 0);
 
+            // [208] l-explicit-document ::= c-directives-end ( l-bare-document | ( e-node s-l-comments ) )
             foreach (var documentToken in ReadDocumentContent())
                 yield return documentToken;
-
-			// [208] l-explicit-document ::= c-directives-end ( l-bare-document | ( e-node s-l-comments ) )
-			// [207] l-bare-document ::= s-l+block-node(-1,block-in) /* Excluding c-forbidden content */
-
-			// [204] c-document-end ::= “.” “.” “.”
-			// [205] l-document-suffix ::= c-document-end s-l-comments
-			// [206] c-forbidden ::= /* Start of line */ ( c-directives-end | c-document-end ) ( b-char | s-white | /* End of file */ )
 
 			yield return new DocumentEndToken(0, 0);
 		}
@@ -97,20 +114,49 @@ namespace YamlSharp
         {
             var contentBuilder = new StringBuilder();
 
+            // [208] l-explicit-document ::= c-directives-end ( l-bare-document | ( e-node s-l-comments ) )
+
             while (currentLine != null)
             {
                 if (currentLine.StartsWith("---") && (currentLine.Length == 3 || (currentLine[3] == ' ' || currentLine[3] == '\t')))
                     break;
 
+                // [204] c-document-end ::= “.” “.” “.”
                 // [205] l-document-suffix ::= c-document-end s-l-comments
-                if (currentLine.StartsWith("...") && (currentLine.Length == 3 || (currentLine[3] == ' ' || currentLine[3] == '\t')))
+                // [206] c-forbidden ::= /* Start of line */ ( c-directives-end | c-document-end ) ( b-char | s-white | /* End of file */ )
+                var documentEnd = false;
+                while (currentLine != null && currentLine.StartsWith("...") && (currentLine.Length == 3 || (currentLine[3] == ' ' || currentLine[3] == '\t')))
                 {
                     currentLine = currentLine.Substring(3);
                     if (!SkipWhitespaceAndComments())
                         throw new Exception("Unexpected token");
-                    break;
+                    documentEnd = true;
                 }
 
+                if (documentEnd)
+                    break;
+
+                // Read block content
+                // [207] l-bare-document ::= s-l+block-node(-1,block-in) /* Excluding c-forbidden content */
+                // [196] s-l+block-node(n,c) ::= s-l+block-in-block(n,c) | s-l+flow-in-block(n)
+                // [198] s-l+block-in-block(n,c) ::= s-l+block-scalar(n,c) | s-l+block-collection(n,c)
+                // [201] seq-spaces(n,c) ::= c = block-out => n-1
+                //                           c = block-in  => n
+                // [80] s-separate(n,c) ::= c = block-out => s-separate-lines(n)
+                //                          c = block-in  => s-separate-lines(n)
+                //                          c = flow-out  => s-separate-lines(n)
+                //                          c = flow-in   => s-separate-lines(n)
+                //                          c = block-key => s-separate-in-line
+                //                          c = flow-key  => s-separate-in-line
+                // [81] s-separate-lines(n) ::= ( s-l-comments s-flow-line-prefix(n) ) | s-separate-in-line
+                // [69] s-flow-line-prefix(n) ::= s-indent(n) s-separate-in-line?
+                // [63] s-indent(n) ::= s-space &times; n
+                // [197] s-l+flow-in-block(n) ::= s-separate(n+1,flow-out) ns-flow-node(n+1,flow-out) s-l-comments
+
+                // [199] s-l+block-scalar(n,c) ::= s-separate(n+1,c) ( c-ns-properties(n+1,c) s-separate(n+1,c) )? ( c-l+literal(n) | c-l+folded(n) )
+                // [200] s-l+block-collection(n,c) ::= ( s-separate(n+1,c) c-ns-properties(n+1,c) )? s-l-comments ( l+block-sequence(seq-spaces(n,c)) | l+block-mapping(n) )
+                // [161] ns-flow-node(n,c) ::= c-ns-alias-node | ns-flow-content(n,c) | ( c-ns-properties(n,c) ( ( s-separate(n,c) ns-flow-content(n,c) ) | e-scalar ) )
+                
                 contentBuilder.AppendLine(currentLine);
                 currentLine = reader.ReadLine();
             }

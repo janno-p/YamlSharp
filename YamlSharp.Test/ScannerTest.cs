@@ -27,6 +27,50 @@ namespace YamlSharp.Test
 		}
 
         [Test]
+        public void ReadExplicitDocument()
+        {
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-9.4_explicit-document.yml")))
+            {
+                var scanner = new Scanner(reader);
+                var tokens = scanner.ReadTokens().ToList();
+
+                Assert.AreEqual(12, tokens.Count);
+
+                var documentContentToken = tokens.FindLast(t => t is DocumentContentToken) as DocumentContentToken;
+
+                Assert.IsNotNull(documentContentToken);
+                Assert.That(documentContentToken.Content.TrimEnd(), Is.Empty);
+            }
+        }
+
+        [Test]
+        public void ReadBareDocuments()
+        {
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-9.3_bare-documents.yml")))
+            {
+                var scanner = new Scanner(reader);
+                var tokens = scanner.ReadTokens().ToList();
+
+                Assert.That(tokens.Count, Is.EqualTo(12));
+                Assert.That(tokens[0], Is.InstanceOf(typeof(StreamStartToken)));
+                Assert.That(tokens[1], Is.InstanceOf(typeof(DirectivesStartToken)));
+                Assert.That(tokens[2], Is.InstanceOf(typeof(DirectivesEndToken)));
+                Assert.That(tokens[3], Is.InstanceOf(typeof(DocumentStartToken)));
+                Assert.That(tokens[4], Is.InstanceOf(typeof(DocumentContentToken)));
+                Assert.That(tokens[5], Is.InstanceOf(typeof(DocumentEndToken)));
+                Assert.That(tokens[6], Is.InstanceOf(typeof(DirectivesStartToken)));
+                Assert.That(tokens[7], Is.InstanceOf(typeof(DirectivesEndToken)));
+                Assert.That(tokens[8], Is.InstanceOf(typeof(DocumentStartToken)));
+                Assert.That(tokens[9], Is.InstanceOf(typeof(DocumentContentToken)));
+                Assert.That(tokens[10], Is.InstanceOf(typeof(DocumentEndToken)));
+                Assert.That(tokens[11], Is.InstanceOf(typeof(StreamEndToken)));
+
+                Assert.That(((DocumentContentToken)tokens[4]).Content, Is.Not.Empty);
+                Assert.That(((DocumentContentToken)tokens[9]).Content, Is.Not.Empty);
+            }
+        }
+
+        [Test]
         public void ReadReservedDirective()
         {
             using (var reader = new StreamReader(Path.Combine("TestData", "example-6.13_reserved-directives.yml")))
