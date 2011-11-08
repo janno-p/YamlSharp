@@ -8,8 +8,8 @@ using System.Text.RegularExpressions;
 
 namespace YamlSharp
 {
-	public class Scanner
-	{
+    public class Scanner
+    {
         private class Cursor
         {
             public int Row { get; set; }
@@ -28,64 +28,64 @@ namespace YamlSharp
             }
         }
 
-		private readonly StreamReader reader;
+        private readonly StreamReader reader;
         private readonly Cursor cursor = new Cursor();
 
-	    private string currentLine;
+        private string currentLine;
 
         private readonly IList<int> identLevels = new List<int> { -1 };
 
-		public Scanner(StreamReader reader)
-		{
-			this.reader = reader;
-		}
+        public Scanner(StreamReader reader)
+        {
+            this.reader = reader;
+        }
 
-		public IEnumerable<Token> ReadTokens()
-		{
-			// [211] l-yaml-stream ::= l-document-prefix* l-any-document? ( l-document-suffix+ l-document-prefix* l-any-document? | l-document-prefix* l-explicit-document? )*
+        public IEnumerable<Token> ReadTokens()
+        {
+            // [211] l-yaml-stream ::= l-document-prefix* l-any-document? ( l-document-suffix+ l-document-prefix* l-any-document? | l-document-prefix* l-explicit-document? )*
 
-		    currentLine = string.Empty;
-		    cursor.Reset();
+            currentLine = string.Empty;
+            cursor.Reset();
 
-			yield return new StreamStartToken(0, 0);
+            yield return new StreamStartToken(0, 0);
 
-			while (!reader.EndOfStream)
-			{
-				ReadDocumentPrefix();
-				foreach (var token in ReadDocument())
-					yield return token;
-			}
+            while (!reader.EndOfStream)
+            {
+                ReadDocumentPrefix();
+                foreach (var token in ReadDocument())
+                    yield return token;
+            }
 
-			yield return new StreamEndToken(0, 0);
-		}
+            yield return new StreamEndToken(0, 0);
+        }
 
-		private void ReadDocumentPrefix()
-		{
-			// [202] l-document-prefix ::= c-byte-order-mark? l-comment*
-			// [78] l-comment ::= s-separate-in-line c-nb-comment-text? b-comment
-			// [66] s-separate-in-line ::= s-white+ | /* Start of line */
-			// [31] s-space ::= #x20 /* SP */
-			// [32] s-tab ::= #x9 /* TAB */
-			// [33] s-white ::= s-space | s-tab
-			// [75] c-nb-comment-text ::= “#” nb-char*
-			// [76] b-comment ::= b-non-content | /* End of file */
-			// [30] b-non-content ::= b-break
-			// [28] b-break ::= ( b-carriage-return b-line-feed ) | b-carriage-return | b-line-feed
-			// [27] nb-char ::= c-printable - b-char - c-byte-order-mark
-			// [24] b-line-feed ::= #xA /* LF */
-			// [25] b-carriage-return ::= #xD /* CR */
-			// [26] b-char ::= b-line-feed | b-carriage-return
-			// [1] c-printable ::= #x9 | #xA | #xD | [#x20-#x7E] /* 8 bit */ | #x85 | [#xA0-#xD7FF] | [#xE000-#xFFFD] /* 16 bit */ | [#x10000-#x10FFFF] /* 32 bit */
-			// [2] nb-json ::= #x9 | [#x20-#x10FFFF] (inside quoted scalars)
-			// [3] c-byte-order-mark ::= #xFEFF
+        private void ReadDocumentPrefix()
+        {
+            // [202] l-document-prefix ::= c-byte-order-mark? l-comment*
+            // [78] l-comment ::= s-separate-in-line c-nb-comment-text? b-comment
+            // [66] s-separate-in-line ::= s-white+ | /* Start of line */
+            // [31] s-space ::= #x20 /* SP */
+            // [32] s-tab ::= #x9 /* TAB */
+            // [33] s-white ::= s-space | s-tab
+            // [75] c-nb-comment-text ::= “#” nb-char*
+            // [76] b-comment ::= b-non-content | /* End of file */
+            // [30] b-non-content ::= b-break
+            // [28] b-break ::= ( b-carriage-return b-line-feed ) | b-carriage-return | b-line-feed
+            // [27] nb-char ::= c-printable - b-char - c-byte-order-mark
+            // [24] b-line-feed ::= #xA /* LF */
+            // [25] b-carriage-return ::= #xD /* CR */
+            // [26] b-char ::= b-line-feed | b-carriage-return
+            // [1] c-printable ::= #x9 | #xA | #xD | [#x20-#x7E] /* 8 bit */ | #x85 | [#xA0-#xD7FF] | [#xE000-#xFFFD] /* 16 bit */ | [#x10000-#x10FFFF] /* 32 bit */
+            // [2] nb-json ::= #x9 | [#x20-#x10FFFF] (inside quoted scalars)
+            // [3] c-byte-order-mark ::= #xFEFF
 
-			// TODO : BOM - maybe custom stream reader for yaml which recognizes byte order marks inside stream
+            // TODO : BOM - maybe custom stream reader for yaml which recognizes byte order marks inside stream
 
-		    SkipWhitespaceAndComments();
-		}
+            SkipWhitespaceAndComments();
+        }
 
-		private IEnumerable<Token> ReadDocument()
-		{
+        private IEnumerable<Token> ReadDocument()
+        {
             // [210] l-any-document ::= l-directive-document | l-explicit-document | l-bare-document
 
             yield return new DirectivesStartToken(0, 0);
@@ -101,14 +101,14 @@ namespace YamlSharp
 
             yield return new DirectivesEndToken(0, 0);
 
-		    yield return new DocumentStartToken(0, 0);
+            yield return new DocumentStartToken(0, 0);
 
             // [208] l-explicit-document ::= c-directives-end ( l-bare-document | ( e-node s-l-comments ) )
             foreach (var documentToken in ReadDocumentContent())
                 yield return documentToken;
 
-			yield return new DocumentEndToken(0, 0);
-		}
+            yield return new DocumentEndToken(0, 0);
+        }
 
         private IEnumerable<Token> ReadDocumentContent()
         {
@@ -285,5 +285,5 @@ namespace YamlSharp
             }
             return changedRow;
         }
-	}
+    }
 }
