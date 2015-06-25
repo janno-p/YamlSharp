@@ -1,18 +1,18 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{372B9C73-84AC-4BAB-97B0-B3B99D84E11D}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+		paket.lock = paket.lock
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YamlSharp", "YamlSharp\YamlSharp.csproj", "{42E0CCDD-BBA5-4AF9-812B-850DE60F73F7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YamlSharp.Test", "YamlSharp.Test\YamlSharp.Test.csproj", "{54C4A824-F0B9-4291-8C5F-591830275038}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{71E3DE16-A91C-4A13-95B9-2B60660CB282}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6EA8DB24-D419-41B6-B163-99C8E2622ACA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{6EA8DB24-D419-41B6-B163-99C8E2622ACA}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
@@ -38,7 +38,7 @@ Global
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = YamlSharp\YamlSharp.csproj
 		Policies = $0
-		$0.TextStylePolicy = $1
+		$0.TextStylePolicy = $4
 		$1.FileWidth = 120
 		$1.NoTabsAfterNonTabs = True
 		$1.RemoveTrailingWhitespace = True
@@ -67,14 +67,12 @@ Global
 		$2.inheritsSet = Mono
 		$2.inheritsScope = text/x-csharp
 		$2.scope = text/x-csharp
-		$0.TextStylePolicy = $3
 		$3.FileWidth = 120
 		$3.NoTabsAfterNonTabs = True
 		$3.RemoveTrailingWhitespace = True
 		$3.inheritsSet = VisualStudio
 		$3.inheritsScope = text/plain
 		$3.scope = text/plain
-		$0.TextStylePolicy = $4
 		$4.inheritsSet = null
 		$4.scope = application/x-yaml
 	EndGlobalSection
