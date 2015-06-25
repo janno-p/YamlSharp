@@ -94,7 +94,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\YamlSharp\YamlSharp.csproj">
+    <ProjectReference Include="..\..\src\YamlSharp\YamlSharp.csproj">
       <Project>{42E0CCDD-BBA5-4AF9-812B-850DE60F73F7}</Project>
       <Name>YamlSharp</Name>
     </ProjectReference>
@@ -163,10 +163,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Import Project="..\.paket\paket.targets" />
+  <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\packages\NUnit\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
       <Paket>True</Paket>
     </Reference>

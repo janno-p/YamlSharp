@@ -8,14 +8,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{372B9C
 		paket.lock = paket.lock
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YamlSharp", "YamlSharp\YamlSharp.csproj", "{42E0CCDD-BBA5-4AF9-812B-850DE60F73F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YamlSharp", "src\YamlSharp\YamlSharp.csproj", "{42E0CCDD-BBA5-4AF9-812B-850DE60F73F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YamlSharp.Test", "YamlSharp.Test\YamlSharp.Test.csproj", "{54C4A824-F0B9-4291-8C5F-591830275038}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YamlSharp.Test", "tests\YamlSharp.Test\YamlSharp.Test.csproj", "{54C4A824-F0B9-4291-8C5F-591830275038}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{6EA8DB24-D419-41B6-B163-99C8E2622ACA}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{94AA5A7D-6030-4CD1-A4F9-D1EEE0A4F000}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,8 +37,11 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{54C4A824-F0B9-4291-8C5F-591830275038} = {94AA5A7D-6030-4CD1-A4F9-D1EEE0A4F000}
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = YamlSharp\YamlSharp.csproj
+		StartupItem = src\YamlSharp\YamlSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $4
 		$1.FileWidth = 120
