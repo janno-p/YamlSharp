@@ -5,10 +5,10 @@ namespace YamlSharp
 {
     public static class StringUtil
     {
-		public static Encoding GetFileEncoding(Stream fileStream)
-		{
-			var buffer = new byte[5];
-			
+        private static Encoding GetFileEncoding(Stream fileStream)
+        {
+            var buffer = new byte[5];
+
             fileStream.Read(buffer, 0, 5);
 
             if (buffer[0] == 0x00 && buffer[1] == 0x00 && buffer[2] == 0xFE && buffer[3] == 0xFF)
@@ -30,12 +30,12 @@ namespace YamlSharp
             if (buffer[0] == 0xEF && buffer[1] == 0xBB && buffer[2] == 0xBF)
                 return new UTF8Encoding(true, true);
             return new UTF8Encoding(false, true);
-		}
-		
+        }
+
         public static Encoding GetFileEncoding(string fileName)
         {
             using (var fileStream = new FileStream(fileName, FileMode.Open))
-            	return GetFileEncoding(fileStream);
+                return GetFileEncoding(fileStream);
         }
     }
 }

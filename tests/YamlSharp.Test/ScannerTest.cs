@@ -6,25 +6,25 @@ using System;
 
 namespace YamlSharp.Test
 {
-	[TestFixture]
-	public class ScannerTest
-	{
-		[Test]
-		public void ReadDocumentPrefix()
-		{
-			using (var reader = new StreamReader(Path.Combine("TestData", "example-9.1_document-prefix.yml")))
-			{
-				var scanner = new Scanner(reader);
-			    var tokens = scanner.ReadTokens().ToList();
-				
+    [TestFixture]
+    public class ScannerTest
+    {
+        [Test]
+        public void ReadDocumentPrefix()
+        {
+            using (var reader = new StreamReader(Path.Combine("TestData", "example-9.1_document-prefix.yml")))
+            {
+                var scanner = new Scanner(reader);
+                var tokens = scanner.ReadTokens().ToList();
+
                 Assert.AreEqual(7, tokens.Count);
 
-			    var documentContentToken = tokens.Find(t => t is DocumentContentToken) as DocumentContentToken;
+                var documentContentToken = tokens.Find(t => t is DocumentContentToken) as DocumentContentToken;
 
                 Assert.IsNotNull(documentContentToken);
                 Assert.AreEqual("Document", documentContentToken.Content.TrimEnd());
-			}
-		}
+            }
+        }
 
         [Test]
         public void ReadExplicitDocument()
@@ -289,8 +289,8 @@ namespace YamlSharp.Test
                 Assert.IsInstanceOf(typeof(StreamStartToken), tokens[0]);
                 Assert.IsInstanceOf(typeof(StreamEndToken), tokens[13]);
 
-                var doc1Tokens = tokens.Where((_, i) => i >= 1 && i < 7);
-                var doc2Tokens = tokens.Where((_, i) => i >= 7 && i < 13);
+                var doc1Tokens = tokens.Where((_, i) => i >= 1 && i < 7).ToList();
+                var doc2Tokens = tokens.Where((_, i) => i >= 7 && i < 13).ToList();
 
                 var doc1DirectiveToken = doc1Tokens.First(t => t is DirectiveToken) as DirectiveToken;
                 Assert.IsNotNull(doc1DirectiveToken);
@@ -351,10 +351,11 @@ namespace YamlSharp.Test
         {
             using (var reader = new StreamReader(Path.Combine("TestData", "directives-end-tag-missing.yml")))
             {
-                new Scanner(reader).ReadTokens().ToList();
+                var tokens = new Scanner(reader).ReadTokens().ToList();
 
+                Assert.IsNotNull(tokens);
                 Assert.Fail("This test should fail!");
             }
         }
-	}
+    }
 }

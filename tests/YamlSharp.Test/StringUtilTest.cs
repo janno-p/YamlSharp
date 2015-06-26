@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using System.Text;
 
@@ -21,28 +22,25 @@ namespace YamlSharp.Test
                 "utf32be.yml",
                 "utf32be-explicit-bom.yml",
                 "utf32le.yml",
-                "utf32le-explicit-bom.yml",
+                "utf32le-explicit-bom.yml"
             };
 
-            foreach (var testFile in testFiles)
-            {
-                var fileName = string.Format(Path.Combine("..", "..", "TestData", testFile));
+            foreach (var fileName in testFiles.Select(f => string.Format(Path.Combine("..", "..", "TestData", f))))
                 using (TextReader reader = new StreamReader(fileName, StringUtil.GetFileEncoding(fileName)))
                     Assert.AreEqual("test", reader.ReadLine());
+        }
+
+        [Test]
+        public void Katse()
+        {
+            using (var s = File.OpenRead(Path.Combine("..", "..", "TestData", "utf32le-explicit-bom.yml")))
+            {
+                s.ReadByte(); s.ReadByte(); s.ReadByte(); s.ReadByte();
+                s.ReadByte(); s.ReadByte(); s.ReadByte(); s.ReadByte();
+
+                using (TextReader r = new StreamReader(s, new UTF32Encoding(false, true, true)))
+                    Assert.AreEqual("est", r.ReadLine());
             }
         }
-		
-		[Test]
-		public void Katse()
-		{
-            using (var s = File.OpenRead(Path.Combine("..", "..", "TestData", "utf32le-explicit-bom.yml")))
-			{
-				s.ReadByte(); s.ReadByte(); s.ReadByte(); s.ReadByte();
-				s.ReadByte(); s.ReadByte(); s.ReadByte(); s.ReadByte();
-				
-				using (TextReader r = new StreamReader(s, new UTF32Encoding(false, true, true)))
-					Assert.AreEqual("est", r.ReadLine());
-			}
-		}
     }
 }
